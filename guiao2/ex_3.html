@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--
+    Miguel Filipe Rodrigues Almeida de Matos Fazenda
+    Nmec: 110877
+    VI - Guião 2
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Third Example</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+    <script>
+        // creation of scene, camera and renderer
+        const scene = new THREE.Scene();
+        const renderer = new THREE.WebGLRenderer();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;  // camera aponta por default para o eixo negativo Z
+        scene.add(camera);
+
+        // definitions of scene, camera and renderer
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // definition of lights
+        // directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(0, 5, 0)
+        scene.add(directionalLight);
+
+        // ambient light
+        const alight = new THREE.AmbientLight(0xffffff);
+        alight.position.set(0, 5, 0);
+        scene.add(alight);
+
+        // target object for some lights
+        const target_object = new THREE.Object3D();
+        target_object.position.x = -2.5;
+        scene.add(target_object);
+
+        // red directional light
+        const rdl = new THREE.DirectionalLight(0xff0000, 1);
+        rdl.position.set(-5, 0, 0);
+        rdl.target = target_object;
+        scene.add(rdl);
+        scene.add(rdl.target);
+
+        // blue directional light
+        const bdl = new THREE.DirectionalLight(0x0000ff, 1);
+        bdl.position.set(5, 0, 0);
+        bdl.target.x = -2.5;
+        bdl.target = target_object;
+        scene.add(bdl);
+        scene.add(bdl.target);
+
+        // green spot light
+        const gsl = new THREE.SpotLight(0x00ff00);
+        gsl.position.set(0, 0, -5);
+        gsl.angle = Math.PI/20;
+        gsl.target = target_object;
+        scene.add(gsl);
+        scene.add(gsl.target);
+
+        // definition os the spheres
+        // geometry
+        const geometry1 = new THREE.SphereGeometry(1, 10, 10);
+        const geometry2 = new THREE.SphereGeometry(1.2, 10, 10);
+
+        //materials
+        const material1 = new THREE.MeshPhongMaterial({ color: '#006063', specular: '#a9fcff', shininess: 100, wireframe: true });
+        const material2 = new THREE.MeshPhongMaterial({ color: '#006063', specular: '#a9fcff', shininess: 100, wireframe: true, flatShading: false })
+        const material3 = new THREE.MeshLambertMaterial({ color: '#006063', emissive: '#ffffff', wireframe: false });
+        const silver = new THREE.MeshPhongMaterial({ shading: THREE.SmoothShading });
+        silver.color = new THREE.Color(0.19225, 0.19225, 0.19225);
+        silver.diffuse = new THREE.Color(0.50754, 0.50754, 0.50754);
+        silver.specular = new THREE.Color(0.508273, 0.508273, 0.508273);
+        silver.shininess = 0.4 * 256;
+        const red_rubber = new THREE.MeshPhongMaterial({ shading: THREE.SmoothShading });
+        red_rubber.color = new THREE.Color(0.05, 0.0, 0.0);
+        red_rubber.color = new THREE.Color(0.5, 0.4, 0.4);
+        red_rubber.color = new THREE.Color(0.7, 0.04, 0.04);
+        red_rubber.shininess = 0.0781 * 256;
+        const glassMaterial = new THREE.MeshPhongMaterial({color: 0x222222, specular: 0xffffff, shininess: 100, opacity: 0.4, transparent: true});
+
+
+        // meshes
+        const sphere1 = new THREE.Mesh(geometry1, silver);
+        sphere1.position.set(-2.5, 0, 0);
+        const sphere2 = new THREE.Mesh(geometry1, red_rubber);
+        sphere2.position.set(2.5, 0, 0);
+        const sphere3 = new THREE.Mesh(geometry1, material3);
+        sphere3.position.set(0, 0, 0);
+        const sphere4 = new THREE.Mesh(geometry2, glassMaterial);
+        sphere4.position.set(-2.5, 0, 0);
+        const sphere5 = new THREE.Mesh(geometry2, glassMaterial);
+        sphere5.position.set(2.5, 0, 0);
+
+        scene.add(sphere1);
+        scene.add(sphere2);
+        scene.add(sphere3);
+        scene.add(sphere4);
+        scene.add(sphere5);
+
+        //scene rendering
+        function render() {
+            requestAnimationFrame(render);
+
+            //scene animation
+            sphere1.rotation.x += 0.01;
+            sphere2.rotation.x += 0.01;
+            sphere3.rotation.x += 0.01;
+
+            renderer.render(scene, camera);
+        }
+        render();
+
+        window.addEventListener('resize', function () {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspectRatio = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+    </script>
+</body>
+
+</html>

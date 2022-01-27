@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+    Miguel Filipe Rodrigues Almeida de Matos Fazenda
+    Nmec: 110877
+    VI - Guião 2
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Fourth Example</title>
+        <style>
+            body {margin: 0;}
+            canvas {width: 100%; height: 100%;}
+        </style>
+    </head>
+    <body>
+        <script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+        <script>
+            // creation of scene, camera and renderer
+            const scene = new THREE.Scene();
+            const renderer = new THREE.WebGLRenderer();
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+            camera.position.z = 5;  // camera aponta por default para o eixo negativo Z
+            scene.add( camera );
+
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+            // geometries
+            const paralelpipe_geometry = new THREE.BoxGeometry(2,1,4);
+            const sphere_geometry = new THREE.SphereGeometry(0.5, 10, 10);
+            const cylinder_geometry1 = new THREE.CylinderGeometry(0.5, 0.5, 0.2);
+            const blue = new THREE.MeshBasicMaterial( { color: 0x0000ff, wireframe: true } ); 
+            const red = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } ); 
+            const paralelpipe = new THREE.Mesh(paralelpipe_geometry, blue);
+            const cyl1 = new THREE.Mesh(cylinder_geometry1, red);
+            cyl1.position.set(1, -0.5, 2);
+            cyl1.rotation.set(Math.PI/2, 0, Math.PI/2);
+            const cyl2 = new THREE.Mesh(cylinder_geometry1, red);
+            cyl2.position.set(1, -0.5, -2);
+            cyl2.rotation.set(Math.PI/2, 0, Math.PI/2);
+            const cyl3 = new THREE.Mesh(cylinder_geometry1, red);
+            cyl3.position.set(-1, -0.5, 2);
+            cyl3.rotation.set(Math.PI/2, 0, Math.PI/2);
+            const cyl4 = new THREE.Mesh(cylinder_geometry1, red);
+            cyl4.position.set(-1, -0.5, -2);
+            cyl4.rotation.set(Math.PI/2, 0, Math.PI/2);
+            const car = new THREE.Object3D();
+            car.add(paralelpipe);
+            car.add(cyl1);
+            car.add(cyl2);
+            car.add(cyl3);
+            car.add(cyl4);
+            scene.add(car);
+
+            console.log(paralelpipe.matrix);
+            console.log(cyl1.matrix);
+
+            //pivot for the car
+            const pivot = new THREE.Object3D();
+            //const pivot = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial());
+            pivot.add(car);
+            // pivot.position.set(0, 1, 0);
+            car.position.set(0, -1, 0);
+            scene.add(pivot);
+
+            // axis
+            const cylinder_geometry2 = new THREE.CylinderGeometry(0.1, 0.1, 0.8);
+            const green = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+
+            const x = new THREE.Mesh(cylinder_geometry2, blue);
+            x.position.set(0.4, 0, 0);
+            x.rotation.set(0, 0, Math.PI/2);
+            const y = new THREE.Mesh(cylinder_geometry2, green);
+            y.position.set(0, 0.4, 0);
+            const z = new THREE.Mesh(cylinder_geometry2, red);
+            z.position.set(0, 0, 0.4);
+            z.rotation.set(Math.PI/2, 0, 0);
+            const axis = new THREE.Object3D();
+            axis.add(x);
+            axis.add(y);
+            axis.add(z);
+            scene.add(axis);
+
+            //scene rendering
+            function render() {
+            	requestAnimationFrame(render);
+
+                //scene animation
+                cyl1.rotation.x += 0.1;
+                cyl2.rotation.x += 0.1;
+                cyl3.rotation.x += 0.1;
+                cyl4.rotation.x += 0.1;
+                pivot.rotation.z += 0.01;
+
+                renderer.render(scene, camera);
+            }
+            render();
+
+            window.addEventListener('resize', function(){
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                camera.aspectRatio = window.innerWidth/window.innerHeight;
+                camera.updateProjectionMatrix();
+            });
+
+        </script>
+    </body>
+</html>
